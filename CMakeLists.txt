@@ -561,3 +561,4 @@ endif()
 target_link_libraries(ballcoind ${sodium_LIBRARY_RELEASE} -ldl -lpthread)
 
 add_subdirectory(src/qt)
+add_subdirectory(src/test)
