@@ -1,7 +1,7 @@
 // Copyright (c) 2010 Satoshi Nakamoto
 // Copyright (c) 2009-2014 The Bitcoin developers
 // Copyright (c) 2014-2015 The Dash developers
-// Copyright (c) 2015-2020 The PIVX developers
+// Copyright (c) 2015-2020 The BALLCOIN developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -265,11 +265,11 @@ UniValue stop(const JSONRPCRequest& jsonRequest)
     if (jsonRequest.fHelp || jsonRequest.params.size() > 1)
         throw std::runtime_error(
             "stop\n"
-            "\nStop PIVX server.");
+            "\nStop BALLCOIN server.");
     // Event loop will exit after current HTTP requests have been handled, so
     // this reply will get back to the client.
     StartShutdown();
-    return "PIVX server stopping";
+    return "BALLCOIN server stopping";
 }
 
 
@@ -359,32 +359,32 @@ static const CRPCCommand vRPCCommands[] =
         { "hidden",             "waitforblock",           &waitforblock,           true },
         { "hidden",             "waitforblockheight",     &waitforblockheight,     true },
 
-        /* PIVX features */
-        {"pivx", "listmasternodes", &listmasternodes, true },
-        {"pivx", "getmasternodecount", &getmasternodecount, true },
-        {"pivx", "createmasternodebroadcast", &createmasternodebroadcast, true },
-        {"pivx", "decodemasternodebroadcast", &decodemasternodebroadcast, true },
-        {"pivx", "relaymasternodebroadcast", &relaymasternodebroadcast, true },
-        {"pivx", "masternodecurrent", &masternodecurrent, true },
-        {"pivx", "startmasternode", &startmasternode, true },
-        {"pivx", "createmasternodekey", &createmasternodekey, true },
-        {"pivx", "getmasternodeoutputs", &getmasternodeoutputs, true },
-        {"pivx", "listmasternodeconf", &listmasternodeconf, true },
-        {"pivx", "getmasternodestatus", &getmasternodestatus, true },
-        {"pivx", "getmasternodewinners", &getmasternodewinners, true },
-        {"pivx", "getmasternodescores", &getmasternodescores, true },
-        {"pivx", "preparebudget", &preparebudget, true },
-        {"pivx", "submitbudget", &submitbudget, true },
-        {"pivx", "mnbudgetvote", &mnbudgetvote, true },
-        {"pivx", "getbudgetvotes", &getbudgetvotes, true },
-        {"pivx", "getnextsuperblock", &getnextsuperblock, true },
-        {"pivx", "getbudgetprojection", &getbudgetprojection, true },
-        {"pivx", "getbudgetinfo", &getbudgetinfo, true },
-        {"pivx", "mnbudgetrawvote", &mnbudgetrawvote, true },
-        {"pivx", "mnfinalbudget", &mnfinalbudget, true },
-        {"pivx", "checkbudgets", &checkbudgets, true },
-        {"pivx", "mnsync", &mnsync, true },
-        {"pivx", "spork", &spork, true },
+        /* BALLCOIN features */
+        {"ballcoin", "listmasternodes", &listmasternodes, true },
+        {"ballcoin", "getmasternodecount", &getmasternodecount, true },
+        {"ballcoin", "createmasternodebroadcast", &createmasternodebroadcast, true },
+        {"ballcoin", "decodemasternodebroadcast", &decodemasternodebroadcast, true },
+        {"ballcoin", "relaymasternodebroadcast", &relaymasternodebroadcast, true },
+        {"ballcoin", "masternodecurrent", &masternodecurrent, true },
+        {"ballcoin", "startmasternode", &startmasternode, true },
+        {"ballcoin", "createmasternodekey", &createmasternodekey, true },
+        {"ballcoin", "getmasternodeoutputs", &getmasternodeoutputs, true },
+        {"ballcoin", "listmasternodeconf", &listmasternodeconf, true },
+        {"ballcoin", "getmasternodestatus", &getmasternodestatus, true },
+        {"ballcoin", "getmasternodewinners", &getmasternodewinners, true },
+        {"ballcoin", "getmasternodescores", &getmasternodescores, true },
+        {"ballcoin", "preparebudget", &preparebudget, true },
+        {"ballcoin", "submitbudget", &submitbudget, true },
+        {"ballcoin", "mnbudgetvote", &mnbudgetvote, true },
+        {"ballcoin", "getbudgetvotes", &getbudgetvotes, true },
+        {"ballcoin", "getnextsuperblock", &getnextsuperblock, true },
+        {"ballcoin", "getbudgetprojection", &getbudgetprojection, true },
+        {"ballcoin", "getbudgetinfo", &getbudgetinfo, true },
+        {"ballcoin", "mnbudgetrawvote", &mnbudgetrawvote, true },
+        {"ballcoin", "mnfinalbudget", &mnfinalbudget, true },
+        {"ballcoin", "checkbudgets", &checkbudgets, true },
+        {"ballcoin", "mnsync", &mnsync, true },
+        {"ballcoin", "spork", &spork, true },
 
 #ifdef ENABLE_WALLET
         /* Wallet */
@@ -409,11 +409,11 @@ static const CRPCCommand vRPCCommands[] =
         {"zerocoin", "exportzerocoins", &exportzerocoins, false },
         {"zerocoin", "reconsiderzerocoins", &reconsiderzerocoins, false },
         {"zerocoin", "getspentzerocoinamount", &getspentzerocoinamount, false },
-        {"zerocoin", "getzpivseed", &getzpivseed, false },
-        {"zerocoin", "setzpivseed", &setzpivseed, false },
+        {"zerocoin", "getzballseed", &getzballseed, false },
+        {"zerocoin", "setzballseed", &setzballseed, false },
         {"zerocoin", "generatemintlist", &generatemintlist, false },
-        {"zerocoin", "searchdzpiv", &searchdzpiv, false },
-        {"zerocoin", "dzpivstate", &dzpivstate, false },
+        {"zerocoin", "searchdzball", &searchdzball, false },
+        {"zerocoin", "dzballstate", &dzballstate, false },
 
 #endif // ENABLE_WALLET
 };
@@ -597,14 +597,14 @@ std::vector<std::string> CRPCTable::listCommands() const
 
 std::string HelpExampleCli(std::string methodname, std::string args)
 {
-    return "> pivx-cli " + methodname + " " + args + "\n";
+    return "> ballcoin-cli " + methodname + " " + args + "\n";
 }
 
 std::string HelpExampleRpc(std::string methodname, std::string args)
 {
     return "> curl --user myusername --data-binary '{\"jsonrpc\": \"1.0\", \"id\":\"curltest\", "
            "\"method\": \"" +
-           methodname + "\", \"params\": [" + args + "] }' -H 'content-type: text/plain;' http://127.0.0.1:51473/\n";
+           methodname + "\", \"params\": [" + args + "] }' -H 'content-type: text/plain;' http://127.0.0.1:51885/\n";
 }
 
 void RPCSetTimerInterfaceIfUnset(RPCTimerInterface *iface)

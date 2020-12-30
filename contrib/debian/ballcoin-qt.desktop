@@ -1,0 +1,12 @@
+[Desktop Entry]
+Version=1.0
+Name=BALLCOIN Core
+Comment=BALLCOIN P2P Cryptocurrency
+Exec=ballcoin-qt %u
+Terminal=false
+Type=Application
+Icon=ballcoin128
+MimeType=x-scheme-handler/ballcoin;
+Categories=Office;Finance;
+StartupWMClass=BALLcoin-qt
+Name[de_DE]=ballcoin-qt.desktop

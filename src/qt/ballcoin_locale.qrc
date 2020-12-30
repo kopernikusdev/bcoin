@@ -1,0 +1,18 @@
+<!DOCTYPE RCC><RCC version="1.0">
+    <qresource prefix="/translations">
+        <file alias="de">locale/ballcoin_de.qm</file>
+        <file alias="en">locale/ballcoin_en.qm</file>
+        <file alias="en_US">locale/ballcoin_en_US.qm</file>
+        <file alias="es">locale/ballcoin_es.qm</file>
+        <file alias="es_ES">locale/ballcoin_es_ES.qm</file>
+        <file alias="fr_FR">locale/ballcoin_fr_FR.qm</file>
+        <file alias="hr_HR">locale/ballcoin_hr_HR.qm</file>
+        <file alias="it">locale/ballcoin_it.qm</file>
+        <file alias="ko_KR">locale/ballcoin_ko_KR.qm</file>
+        <file alias="nl">locale/ballcoin_nl.qm</file>
+        <file alias="pl">locale/ballcoin_pl.qm</file>
+        <file alias="ru">locale/ballcoin_ru.qm</file>
+        <file alias="tr">locale/ballcoin_tr.qm</file>
+        <file alias="zh_CN">locale/ballcoin_zh_CN.qm</file>
+    </qresource>
+</RCC>

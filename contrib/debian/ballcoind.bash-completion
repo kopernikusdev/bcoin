@@ -1,0 +1,2 @@
+contrib/ballcoind.bash-completion	ballcoind
+contrib/ballcoin-cli.bash-completion ballcoin-cli
