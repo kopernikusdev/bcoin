@@ -52,10 +52,10 @@ class ReorgStakeTest(BALLcoinTestFramework):
         return wi['balance'] + wi['immature_balance']
 
     def check_money_supply(self, expected_ball):
-        g_info = [self.nodes[i].getinfo() for i in range(self.num_nodes)]
         # verify that nodes have the expected BALL supply
-        for node in g_info:
-            assert_equal(node['moneysupply'], DecimalAmt(expected_ball))
+        ball_supply = [self.nodes[i].getsupplyinfo(True)['supply']
+                      for i in range(self.num_nodes)]
+        assert_equal(ball_supply, [DecimalAmt(expected_ball)] * self.num_nodes)
 
     def run_test(self):
 

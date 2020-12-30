@@ -20,6 +20,7 @@
 #include "chainparams.h"
 #include "coins.h"
 #include "consensus/validation.h"
+#include "moneysupply.h"
 #include "net.h"
 #include "pow.h"
 #include "primitives/block.h"
@@ -173,6 +174,8 @@ extern bool fLargeWorkForkFound;
 extern bool fLargeWorkInvalidChainFound;
 
 extern std::map<uint256, int64_t> mapRejectedBlocks;
+
+extern CMoneySupply MoneySupply;
 
 /** Best header we've seen so far (used for getheaders queries' starting points). */
 extern CBlockIndex* pindexBestHeader;

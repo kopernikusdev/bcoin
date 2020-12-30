@@ -67,8 +67,9 @@ UniValue getinfo(const JSONRPCRequest& request)
             "  \"proxy\": \"host:port\",       (string, optional) the proxy used by the server\n"
             "  \"difficulty\": xxxxxx,         (numeric) the current difficulty\n"
             "  \"testnet\": true|false,        (boolean) if the server is using testnet or not\n"
-            "  \"moneysupply\" : \"supply\"    (numeric) The current spendable supply (sum of the value of all unspent\n"
-            "                                            transaction outputs)\n"
+            "  \"moneysupply\" : \"supply\"    (numeric) The sum of the value of all unspent outputs when the chainstate was\n"
+            "                                            last flushed to disk (use getsupplyinfo to know the update-height, or\n"
+            "                                            to trigger the money supply update/recalculation)"
             "  \"zBALLsupply\" :\n"
             "  {\n"
             "     \"1\" : n,            (numeric) supply of 1 zBALL denomination\n"
@@ -147,8 +148,9 @@ UniValue getinfo(const JSONRPCRequest& request)
         return obj;
     }
 
-    FlushStateToDisk();
-    obj.push_back(Pair("moneysupply",ValueFromAmount(pcoinsTip->GetTotalAmount())));
+    // Add (cached) money supply via getsupplyinfo RPC
+    UniValue supply_info = getsupplyinfo(JSONRPCRequest());
+        obj.push_back(Pair("moneysupply", supply_info["supply"]));
     UniValue zballObj(UniValue::VOBJ);
     for (auto denom : libzerocoin::zerocoinDenomList) {
         if (mapZerocoinSupply.empty())
