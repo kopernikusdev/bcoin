@@ -20,7 +20,5 @@ int CurrentPublicCoinSpendVersion();
 bool CheckPublicCoinSpendVersion(int version);
 bool ContextualCheckZerocoinSpend(const CTransaction& tx, const libzerocoin::CoinSpend* spend, int nHeight, const uint256& hashBlock);
 bool ContextualCheckZerocoinSpendNoSerialCheck(const CTransaction& tx, const libzerocoin::CoinSpend* spend, int nHeight, const uint256& hashBlock);
-bool RecalculateBALLSupply(int nHeightStart, bool fSkipZball = true);
-CAmount GetInvalidUTXOValue();
 
 #endif //BALLCOIN_CONSENSUS_ZEROCOIN_VERIFY_H

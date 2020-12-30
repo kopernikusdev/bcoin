@@ -412,7 +412,6 @@ std::string HelpMessage(HelpMessageMode mode)
     strUsage += HelpMessageOpt("-pid=<file>", strprintf(_("Specify pid file (default: %s)"), BALLCOIN_PID_FILENAME));
 #endif
     strUsage += HelpMessageOpt("-reindex", _("Rebuild block chain index from current blk000??.dat files") + " " + _("on startup"));
-    strUsage += HelpMessageOpt("-reindexmoneysupply", strprintf(_("Reindex the %s and z%s money supply statistics"), CURRENCY_UNIT, CURRENCY_UNIT) + " " + _("on startup"));
     strUsage += HelpMessageOpt("-resync", _("Delete blockchain folders and resync from scratch") + " " + _("on startup"));
 #if !defined(WIN32)
     strUsage += HelpMessageOpt("-sysperms", _("Create new files with system default permissions, instead of umask 077 (only effective with disabled wallet functionality)"));
@@ -1544,26 +1543,34 @@ bool AppInit2()
                 invalid_out::LoadSerials();
 
                 bool fReindexZerocoin = GetBoolArg("-reindexzerocoin", false);
-                bool fReindexMoneySupply = GetBoolArg("-reindexmoneysupply", false);
 
                 int chainHeight;
+                bool fZerocoinActive;
                 {
                     LOCK(cs_main);
                     chainHeight = chainActive.Height();
+                    fZerocoinActive = consensus.NetworkUpgradeActive(chainHeight, Consensus::UPGRADE_ZC);
 
-                    // initialize BALL and zBALL supply to 0
+                    // Prune zerocoin mints that were improperly stored in the coins database
+                    // Do it only once, when removing money supply (key 'M') from the DB. Can be skipped in future versions.
+                    int64_t nDummySupply;
+                    if (fZerocoinActive && pblocktree->Read('M', nDummySupply)) {
+                        LogPrintf("Pruning zerocoin mints / invalid outs, at height %d\n", chainHeight);
+                        pcoinsTip->PruneInvalidEntries();
+                        pblocktree->Erase('M');
+                    }
+
+                    // initialize zBALL supply to 0
                     mapZerocoinSupply.clear();
                     for (auto& denom : libzerocoin::zerocoinDenomList) mapZerocoinSupply.insert(std::make_pair(denom, 0));
-                    nMoneySupply = 0;
 
-                    // Load BALL and zBALL supply from DB
+                    // Load zBALL supply from DB
                     if (chainHeight >= 0) {
                         const uint256& tipHash = chainActive[chainHeight]->GetBlockHash();
                         CLegacyBlockIndex bi;
 
                         // Load zBALL supply map
-                        if (!fReindexZerocoin && consensus.NetworkUpgradeActive(chainHeight, Consensus::UPGRADE_ZC) &&
-                                !zerocoinDB->ReadZCSupply(mapZerocoinSupply)) {
+                        if (!fReindexZerocoin && fZerocoinActive && !zerocoinDB->ReadZCSupply(mapZerocoinSupply)) {
                             // try first reading legacy block index from DB
                             if (pblocktree->ReadLegacyBlockIndex(tipHash, bi) && !bi.mapZerocoinSupply.empty()) {
                                 mapZerocoinSupply = bi.mapZerocoinSupply;
@@ -1573,21 +1580,11 @@ bool AppInit2()
                             }
                         }
 
-                        // Load BALL supply amount
-                        if (!fReindexMoneySupply && !pblocktree->ReadMoneySupply(nMoneySupply)) {
-                            // try first reading legacy block index from DB
-                            if (pblocktree->ReadLegacyBlockIndex(tipHash, bi)) {
-                                nMoneySupply = bi.nMoneySupply;
-                            } else {
-                                // reindex from disk
-                                fReindexMoneySupply = true;
-                            }
-                        }
                     }
                 }
 
                 // Drop all information from the zerocoinDB and repopulate
-                if (fReindexZerocoin && consensus.NetworkUpgradeActive(chainHeight, Consensus::UPGRADE_ZC)) {
+                if (fReindexZerocoin && fZerocoinActive) {
                     LOCK(cs_main);
                     uiInterface.InitMessage(_("Reindexing zerocoin database..."));
                     std::string strError = ReindexZerocoinDB();
@@ -1595,13 +1592,6 @@ bool AppInit2()
                         strLoadError = strError;
                         break;
                     }
-                }
-
-                // Recalculate money supply
-                if (fReindexMoneySupply) {
-                    LOCK(cs_main);
-                    // Skip zball if already reindexed
-                    RecalculateBALLSupply(1, fReindexZerocoin);
                 }
 
                 if (!fReindex) {

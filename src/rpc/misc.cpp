@@ -67,7 +67,8 @@ UniValue getinfo(const JSONRPCRequest& request)
             "  \"proxy\": \"host:port\",       (string, optional) the proxy used by the server\n"
             "  \"difficulty\": xxxxxx,         (numeric) the current difficulty\n"
             "  \"testnet\": true|false,        (boolean) if the server is using testnet or not\n"
-            "  \"moneysupply\" : \"supply\"    (numeric) The money supply when this block was added to the blockchain\n"
+            "  \"moneysupply\" : \"supply\"    (numeric) The current spendable supply (sum of the value of all unspent\n"
+            "                                            transaction outputs)\n"
             "  \"zBALLsupply\" :\n"
             "  {\n"
             "     \"1\" : n,            (numeric) supply of 1 zBALL denomination\n"
@@ -146,7 +147,8 @@ UniValue getinfo(const JSONRPCRequest& request)
         return obj;
     }
 
-    obj.push_back(Pair("moneysupply",ValueFromAmount(nMoneySupply)));
+    FlushStateToDisk();
+    obj.push_back(Pair("moneysupply",ValueFromAmount(pcoinsTip->GetTotalAmount())));
     UniValue zballObj(UniValue::VOBJ);
     for (auto denom : libzerocoin::zerocoinDenomList) {
         if (mapZerocoinSupply.empty())
