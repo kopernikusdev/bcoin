@@ -27,7 +27,7 @@ BOOST_AUTO_TEST_CASE(budget_value)
 
     SelectParams(CBaseChainParams::MAIN);
     nHeightTest = Params().GetConsensus().vUpgrades[Consensus::UPGRADE_ZC_V2].nActivationHeight + 1;
-    CheckBudgetValue(nHeightTest, "mainnet", 17280*COIN);
+    CheckBudgetValue(nHeightTest, "mainnet", 43200*COIN);
 }
 
 BOOST_AUTO_TEST_SUITE_END()

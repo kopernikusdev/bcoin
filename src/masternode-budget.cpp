@@ -799,27 +799,38 @@ CAmount CBudgetManager::GetTotalBudget(int nHeight)
     CAmount nSubsidy = 0;
     const Consensus::Params& consensus = Params().GetConsensus();
     const bool isPoSActive = consensus.NetworkUpgradeActive(nHeight, Consensus::UPGRADE_POS);
-	if (nHeight < 15000 && nHeight > 0) {
-        nSubsidy = 250 * COIN;
-    //} else if (nHeight < 105000 && nHeight >= 15000) {
-    } else if (nHeight >= 15000) {    
-        nSubsidy = 4 * COIN;
-    //} else if (nHeight < 195000 && nHeight >= 105000) {
-    //    nSubsidy = 5 * COIN;
-    //} else if (nHeight < 285000 && nHeight >= 195000) {
-    //    nSubsidy = 6 * COIN;
-    //} else if (nHeight < 375000 && nHeight >= 285000) {
-    //    nSubsidy = 7 * COIN;
-    //} else if (nHeight < 465000 && nHeight >= 375000) {
-    //    nSubsidy = 8 * COIN;
-    //} else if (nHeight < 555000 && nHeight >= 465000) {
-    //    nSubsidy = 9 * COIN;
-    //} else {
-    //    nSubsidy = 10 * COIN;
+    if (nHeight >= 151200 && !isPoSActive) {
+        nSubsidy = 50 * COIN;
+    } else if (isPoSActive && nHeight <= 302399) {
+        nSubsidy = 50 * COIN;
+    } else if (nHeight <= 345599 && nHeight >= 302400) {
+        nSubsidy = 45 * COIN;
+    } else if (nHeight <= 388799 && nHeight >= 345600) {
+        nSubsidy = 40 * COIN;
+    } else if (nHeight <= 431999 && nHeight >= 388800) {
+        nSubsidy = 35 * COIN;
+    } else if (nHeight <= 475199 && nHeight >= 432000) {
+        nSubsidy = 30 * COIN;
+    } else if (nHeight <= 518399 && nHeight >= 475200) {
+        nSubsidy = 25 * COIN;
+    } else if (nHeight <= 561599 && nHeight >= 518400) {
+        nSubsidy = 20 * COIN;
+    } else if (nHeight <= 604799 && nHeight >= 561600) {
+        nSubsidy = 15 * COIN;
+    } else if (nHeight <= 647999 && nHeight >= 604800) {
+        nSubsidy = 10 * COIN;
+    } else if (consensus.NetworkUpgradeActive(nHeight, Consensus::UPGRADE_ZC_V2)) {
+        nSubsidy = 10 * COIN;
+    } else {
+        nSubsidy = 5 * COIN;
     }
 
     // Amount of blocks in a months period of time (using 1 minutes per) = (60*24*30)
-    return ((nSubsidy / 100) * 10) * 1440 * 30;
+    if (nHeight <= 172800) {
+        return 648000 * COIN;
+    } else {
+        return ((nSubsidy / 100) * 10) * 1440 * 30;
+    }
 }
 
 void CBudgetManager::AddSeenProposal(const CBudgetProposalBroadcast& prop)
