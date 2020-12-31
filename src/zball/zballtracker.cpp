@@ -123,41 +123,17 @@ std::vector<uint256> CzBALLTracker::GetSerialHashes()
     return vHashes;
 }
 
-CAmount CzBALLTracker::GetBalance(bool fConfirmedOnly, bool fUnconfirmedOnly) const
+CAmount CzBALLTracker::GetBalance() const
 {
     CAmount nTotal = 0;
-    //! zerocoin specific fields
-    std::map<libzerocoin::CoinDenomination, unsigned int> myZerocoinSupply;
-    for (auto& denom : libzerocoin::zerocoinDenomList) {
-        myZerocoinSupply.insert(std::make_pair(denom, 0));
+    for (auto& it : mapSerialHashes) {
+        const CMintMeta& meta = it.second;
+        if (meta.isUsed || meta.isArchived)
+            continue;
+        nTotal += libzerocoin::ZerocoinDenominationToAmount(meta.denom);
     }
-
-    {
-        //LOCK(cs_balltracker);
-        // Get Unused coins
-        for (auto& it : mapSerialHashes) {
-            CMintMeta meta = it.second;
-            if (meta.isUsed || meta.isArchived)
-                continue;
-            bool fConfirmed = ((meta.nHeight < chainActive.Height() - Params().GetConsensus().ZC_MinMintConfirmations) && !(meta.nHeight == 0));
-            if (fConfirmedOnly && !fConfirmed)
-                continue;
-            if (fUnconfirmedOnly && fConfirmed)
-                continue;
-
-            nTotal += libzerocoin::ZerocoinDenominationToAmount(meta.denom);
-            myZerocoinSupply.at(meta.denom)++;
-        }
-    }
-
-    if (nTotal < 0 ) nTotal = 0; // Sanity never hurts
 
     return nTotal;
-}
-
-CAmount CzBALLTracker::GetUnconfirmedBalance() const
-{
-    return GetBalance(false, true);
 }
 
 std::vector<CMintMeta> CzBALLTracker::GetMints(bool fConfirmedOnly) const
