@@ -1551,7 +1551,15 @@ int64_t GetBlockValue(int nHeight)
 
 int64_t GetMasternodePayment()
 {
-    return 3 * COIN;
+	int64_t ret = 0;
+	const int nHeight = chainActive.Height();
+	
+	if (nHeight < 15000) {
+		ret = GetBlockValue(nHeight) / 5;
+	} else {
+		ret = GetBlockValue(nHeight) * 0.8;
+	}
+	return ret;
 }
 
 bool IsInitialBlockDownload()
