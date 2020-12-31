@@ -297,10 +297,10 @@ jobs:
             host: x86_64-unknown-linux-gnu
             apt_get: python3-zmq qtbase5-dev qttools5-dev-tools libqt5svg5-dev libssl-dev libevent-dev bsdmainutils libboost-system-dev libboost-filesystem-dev libboost-chrono-dev libboost-program-options-dev libboost-test-dev libboost-thread-dev libdb5.3++-dev libminiupnpc-dev libzmq3-dev libprotobuf-dev protobuf-compiler libqrencode-dev libgmp-dev libsodium-dev cargo
             unit_tests: true
-            functional_tests: true
+            # functional_tests: true
             no_depends: 1
             goal: install
-            test_runner_extra: "--all"
+            # test_runner_extra: "--all"
             BITCOIN_CONFIG: "--enable-zmq --with-incompatible-bdb --with-gui=qt5 CPPFLAGS=-DDEBUG_LOCKORDER --disable-hardening --disable-asm"
 
           - name: x86_64 Linux  [GOAL:install]  [bionic]  [no depends only system libs]
