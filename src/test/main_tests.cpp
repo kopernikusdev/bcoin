@@ -123,29 +123,29 @@ BOOST_AUTO_TEST_CASE(subsidy_limit_test)
         nSum += nSubsidy;
     }
 
-    for (int nHeight = 1; nHeight < 86400; nHeight += 1) {
-        /* PoW Phase One */
+//    for (int nHeight = 1; nHeight < 86400; nHeight += 1) {
+//        /* PoW Phase One */
+//        CAmount nSubsidy = GetBlockValue(nHeight);
+//        BOOST_CHECK(nSubsidy <= 250 * COIN);
+//        nSum += nSubsidy;
+//    }
+
+//    for (int nHeight = 86400; nHeight < 151200; nHeight += 1) {
+//        /* PoW Phase Two */
+//        CAmount nSubsidy = GetBlockValue(nHeight);
+//        BOOST_CHECK(nSubsidy <= 225 * COIN);
+//        nSum += nSubsidy;
+//    }
+
+    for (int nHeight = 1; nHeight < 15000; nHeight += 1) {
+        /* PoW Phase & POS with 250 */
         CAmount nSubsidy = GetBlockValue(nHeight);
         BOOST_CHECK(nSubsidy <= 250 * COIN);
-        nSum += nSubsidy;
-    }
-
-    for (int nHeight = 86400; nHeight < 151200; nHeight += 1) {
-        /* PoW Phase Two */
-        CAmount nSubsidy = GetBlockValue(nHeight);
-        BOOST_CHECK(nSubsidy <= 225 * COIN);
-        nSum += nSubsidy;
-    }
-
-    for (int nHeight = 151200; nHeight < 259200; nHeight += 1) {
-        /* PoW Phase Two */
-        CAmount nSubsidy = GetBlockValue(nHeight);
-        BOOST_CHECK(nSubsidy <= 45 * COIN);
         BOOST_CHECK(Params().GetConsensus().MoneyRange(nSubsidy));
         nSum += nSubsidy;
         BOOST_CHECK(nSum > 0 && nSum <= nMoneySupplyPoWEnd);
     }
-    BOOST_CHECK(nSum == 4109975100000000ULL);
+    BOOST_CHECK(nSum == 380975100000000ULL);
 }
 
 bool ReturnFalse() { return false; }
