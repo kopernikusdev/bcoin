@@ -6,7 +6,7 @@ jobs:
     env:
       SHELLCHECK_VERSION: v0.6.0
       LC_ALL: C
-    runs-on: ubuntu-18.04 
+    runs-on: ubuntu-18.04
     defaults:
       run:
         shell: bash
@@ -279,7 +279,7 @@ jobs:
             unit_tests: true
             functional_tests: true
             goal: install
-           test_runner_extra: "--coverage --all"
+            test_runner_extra: "--coverage --all"
             BITCOIN_CONFIG: "--enable-zmq --with-gui=qt5 --enable-glibc-back-compat --enable-reduce-exports --disable-online-rust"
 
           - name: x86_64 Linux  [GOAL:install]  [bionic] [no GUI no unit tests - only functional tests on legacy pre-HD wallets]
@@ -319,7 +319,7 @@ jobs:
             OSX_SDK: 10.11
             unit_tests: false
             functional_tests: false
-            goal: install
+            goal: deploy
             BITCOIN_CONFIG: "--enable-gui --enable-reduce-exports --enable-werror --disable-online-rust"
 
     steps:
