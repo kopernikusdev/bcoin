@@ -634,8 +634,6 @@ UniValue getsupplyinfo(const JSONRPCRequest& request)
 }
 
 struct CCoinsStats
-
-struct CCoinsStats
 {
     int nHeight;
     uint256 hashBlock;
