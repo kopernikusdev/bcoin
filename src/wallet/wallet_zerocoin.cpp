@@ -762,7 +762,7 @@ bool CWallet::CreateZCPublicSpendTransaction(
 
 CAmount CWallet::GetZerocoinBalance() const
 {
-    return zpivTracker->GetBalance();
+    return zballTracker->GetBalance();
 }
 
 // Get a Map pairing the Denominations with the amount of Zerocoin for each Denomination
