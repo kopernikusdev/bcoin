@@ -50,9 +50,10 @@ class BudgetProposalTest(BALLcoinTestFramework):
         assert_raises_rpc_error(-8, "Invalid amount - Payment of 9.00 is less than minimum 10 BALL allowed", self.nodes[0].preparebudget,
                                 name, scheme + url, numcycles, nextsuperblock, address, 9)
 
+		invalid_amt = 50 * 144 + 0.00000001
         self.log.info("Test with too high amount")
-        assert_raises_rpc_error(-8, "Invalid amount - Payment of 648001.00 more than max of 648000.00", self.nodes[0].preparebudget,
-                                name, scheme + url, numcycles, nextsuperblock, address, 648001)
+        assert_raises_rpc_error(-8, "Invalid amount - Payment of %8f more than max of 7200.00" % invalid_amt, self.nodes[0].preparebudget,
+                                name, scheme + url, numcycles, nextsuperblock, address, invalid_amt)
 
 
         self.log.info("Test without URL scheme")

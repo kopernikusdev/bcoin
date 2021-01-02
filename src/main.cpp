@@ -1499,43 +1499,29 @@ double ConvertBitsToDouble(unsigned int nBits)
     return dDiff;
 }
 
-int64_t GetBlockValue(int nHeight)
+CAmount GetBlockValue(int nHeight)
 {
-    if (Params().NetworkID() == CBaseChainParams::TESTNET) {
-        if (nHeight < 200 && nHeight > 0)
-            return 250000 * COIN;
-    }
-
+	// Fixed block value on regtest
     if (Params().IsRegTestNet()) {
-        if (nHeight == 0)
-            return 250 * COIN;
-
+        return 250 * COIN;
     }
+	// Testnet high-inflation blocks [2, 200] with value 250k BALL
+	const bool isTestnet = Params().NetworkID() == CBaseChainParams::TESTNET;
+	if (isTestnet && nHeight < 201 && nHeight > 1) {
+		return 250000 * COIN;
+	}
+	// Mainnet/Testnet block reward schedule
 
-    const Consensus::Params& consensus = Params().GetConsensus();
-    const bool isPoSActive = consensus.NetworkUpgradeActive(nHeight, Consensus::UPGRADE_POS);
-    int64_t nSubsidy = 0;
-    if (nHeight == 0) {
-        nSubsidy = 60001 * COIN;
-    } else if (nHeight < 15000 && nHeight > 0) {
-        nSubsidy = 250 * COIN;
-    //} else if (nHeight < 105000 && nHeight >= 15000) {
-    } else if (nHeight >= 15000) {    
-        nSubsidy = 4 * COIN;
-    //} else if (nHeight < 195000 && nHeight >= 105000) {
-    //    nSubsidy = 5 * COIN;
-    //} else if (nHeight < 285000 && nHeight >= 195000) {
-    //    nSubsidy = 6 * COIN;
-    //} else if (nHeight < 375000 && nHeight >= 285000) {
-    //    nSubsidy = 7 * COIN;
-    //} else if (nHeight < 465000 && nHeight >= 375000) {
-    //    nSubsidy = 8 * COIN;
-    //} else if (nHeight < 555000 && nHeight >= 465000) {
-    //    nSubsidy = 9 * COIN;
-    //} else {
-    //    nSubsidy = 10 * COIN;
-    }
-    return nSubsidy;
+    //if (nHeight >= 555000) return 10 * COIN;
+    //if (nHeight >= 465000) return 9 * COIN;
+    //if (nHeight >= 375000) return 8 * COIN;
+    //if (nHeight >= 285000) return 7 * COIN;
+    //if (nHeight >= 195000) return 6 * COIN;
+    //if (nHeight >= 105000) return 5 * COIN;
+    if (nHeight >= 15000) return 4 * COIN; 
+    if (nHeight !=1) return 250 * COIN;
+    // Premine at block 1
+	return 60001 * COIN;
 }
 
 int64_t GetMasternodePayment()
@@ -2389,7 +2375,7 @@ bool ConnectBlock(const CBlock& block, CValidationState& state, CBlockIndex* pin
     LogPrint(BCLog::BENCH, "      - Connect %u transactions: %.2fms (%.3fms/tx, %.3fms/txin) [%.2fs]\n", (unsigned)block.vtx.size(), 0.001 * (nTime1 - nTimeStart), 0.001 * (nTime1 - nTimeStart) / block.vtx.size(), nInputs <= 1 ? 0 : 0.001 * (nTime1 - nTimeStart) / (nInputs - 1), nTimeConnect * 0.000001);
 
     //PoW phase redistributed fees to miner. PoS stage destroys fees.
-    CAmount nExpectedMint = GetBlockValue(pindex->pprev->nHeight);
+    CAmount nExpectedMint = GetBlockValue(pindex->nHeight);
     if (block.IsProofOfWork())
         nExpectedMint += nFees;
 
@@ -3378,7 +3364,7 @@ bool CheckColdStakeFreeOutput(const CTransaction& tx, const int nHeight)
             CTransaction txPrev; uint256 hashBlock;
             if (!GetTransaction(tx.vin[0].prevout.hash, txPrev, hashBlock, true))
                 return error("%s : read txPrev failed: %s",  __func__, tx.vin[0].prevout.hash.GetHex());
-            CAmount amtIn = txPrev.vout[tx.vin[0].prevout.n].nValue + GetBlockValue(nHeight - 1);
+            CAmount amtIn = txPrev.vout[tx.vin[0].prevout.n].nValue + GetBlockValue(nHeight);
             CAmount amtOut = 0;
             for (unsigned int i = 1; i < outs-1; i++) amtOut += tx.vout[i].nValue;
             if (amtOut != amtIn)
