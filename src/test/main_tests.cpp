@@ -116,9 +116,9 @@ CAmount nMoneySupplyPoWEnd = 43199500 * COIN;
 BOOST_AUTO_TEST_CASE(subsidy_limit_test)
 {
     CAmount nSum = 0;
-    for (int nHeight = 0; nHeight < 1; nHeight += 1) {
+    for (int nHeight = 1; nHeight < 2; nHeight += 1) {
         /* premine in block 1 (60,001 BALL) */
-        CAmount nSubsidy = GetBlockValue(nHeight + 1);
+        CAmount nSubsidy = GetBlockValue(nHeight);
         BOOST_CHECK(nSubsidy <= 60001 * COIN);
         nSum += nSubsidy;
     }
@@ -137,9 +137,9 @@ BOOST_AUTO_TEST_CASE(subsidy_limit_test)
 //        nSum += nSubsidy;
 //    }
 
-    for (int nHeight = 1; nHeight < 15000; nHeight += 1) {
+    for (int nHeight = 2; nHeight < 15000; nHeight += 1) {
         /* PoW Phase & POS with 250 */
-        CAmount nSubsidy = GetBlockValue(nHeight + 1);
+        CAmount nSubsidy = GetBlockValue(nHeight);
         BOOST_CHECK(nSubsidy <= 250 * COIN);
         BOOST_CHECK(Params().GetConsensus().MoneyRange(nSubsidy));
         nSum += nSubsidy;
