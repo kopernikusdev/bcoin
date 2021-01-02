@@ -865,7 +865,7 @@ bool AcceptToMemoryPoolWorker(CTxMemPool& pool, CValidationState &state, const C
 
     // Check transaction
     int chainHeight = chainActive.Height();
-    bool fColdStakingActive = !sporkManager.IsSporkActive(SPORK_19_COLDSTAKING_MAINTENANCE);
+    bool fColdStakingActive = sporkManager.IsSporkActive(SPORK_17_COLDSTAKING_ENFORCEMENT);
     if (!CheckTransaction(tx, consensus.NetworkUpgradeActive(chainHeight, Consensus::UPGRADE_ZC),
             true, state, isBlockBetweenFakeSerialAttackRange(chainHeight), fColdStakingActive))
         return error("%s : transaction checks for %s failed with %s", __func__, tx.GetHash().ToString(), FormatStateMessage(state));
@@ -3495,7 +3495,7 @@ bool CheckBlock(const CBlock& block, CValidationState& state, bool fCheckPOW, bo
             }
 
             // set Cold Staking Spork
-            fColdStakingActive = !sporkManager.IsSporkActive(SPORK_19_COLDSTAKING_MAINTENANCE);
+            fColdStakingActive = sporkManager.IsSporkActive(SPORK_17_COLDSTAKING_ENFORCEMENT);
 
             // check masternode/budget payment
             if (!IsBlockPayeeValid(block, nHeight)) {
@@ -5325,8 +5325,8 @@ bool static ProcessMessage(CNode* pfrom, std::string strCommand, CDataStream& vR
         bool fMissingSporks = !pSporkDB->SporkExists(SPORK_14_NEW_PROTOCOL_ENFORCEMENT) ||
                               !pSporkDB->SporkExists(SPORK_15_NEW_PROTOCOL_ENFORCEMENT_2) ||
                               !pSporkDB->SporkExists(SPORK_16_ZEROCOIN_MAINTENANCE_MODE) ||
-                              !pSporkDB->SporkExists(SPORK_18_ZEROCOIN_PUBLICSPEND_V4) ||
-                              !pSporkDB->SporkExists(SPORK_19_COLDSTAKING_MAINTENANCE);
+                              !pSporkDB->SporkExists(SPORK_17_COLDSTAKING_ENFORCEMENT) ||
+                              !pSporkDB->SporkExists(SPORK_18_ZEROCOIN_PUBLICSPEND_V4);
 
         if (fMissingSporks || !fRequestedSporksIDB){
             LogPrintf("asking peer for sporks\n");
