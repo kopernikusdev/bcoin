@@ -89,7 +89,7 @@ class BALLCOIN_ColdStakingTest(BALLcoinTestFramework):
         # nodes[1] - cold-staker
 
 		# First put cold-staking in maintenance mode
-		self.setColdStakingEnforcement(False)
+		self.setColdStakingEnforcement()
 		# double check
 		assert (not self.isColdStakingEnforced())
 		
