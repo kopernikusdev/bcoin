@@ -145,7 +145,7 @@ BOOST_AUTO_TEST_CASE(subsidy_limit_test)
         nSum += nSubsidy;
         BOOST_CHECK(nSum > 0 && nSum <= nMoneySupplyPoWEnd);
     }
-    BOOST_CHECK(nSum == 380975100000000ULL);
+    BOOST_CHECK(nSum == 380950100000000ULL);
 }
 
 bool ReturnFalse() { return false; }
