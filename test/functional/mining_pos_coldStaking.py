@@ -75,7 +75,7 @@ class BALLCOIN_ColdStakingTest(BALLcoinTestFramework):
 
     def isColdStakingEnforced(self):
         # verify from node[1]
-        return self.is_spork_active(1, "SPORK_19_COLDSTAKING_ENFORCEMENT")
+        return self.is_spork_active(1, "SPORK_17_COLDSTAKING_ENFORCEMENT")
 
 
 
